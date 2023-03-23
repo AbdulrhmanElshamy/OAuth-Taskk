@@ -46,6 +46,8 @@ namespace OAuth_Taskk.Repos.AuthRepos
         }
 
 
+
+
         public async Task<Respons<AuthDTO>> RegisterAsync(RegisterDTO registerDTO)
         {
             if (await _userManager.FindByEmailAsync(registerDTO.Email) is not null)
@@ -183,8 +185,6 @@ namespace OAuth_Taskk.Repos.AuthRepos
                     await _userManager.CreateAsync(user);
 
                     //prepare and send an email for the email confirmation
-
-                    await _userManager.AddToRoleAsync(user, "Viewer");
                     await _userManager.AddLoginAsync(user, info);
                 }
                 else
@@ -206,6 +206,7 @@ namespace OAuth_Taskk.Repos.AuthRepos
                     IsAuthenticated = true,
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
                     Email = payload.Email,
+                    ExpireOn = token.ValidTo
                 }
             };
         }
